@@ -14,7 +14,10 @@ next replace all the \n (new line) with a |  and store in in DKIM_PRIVATE_KEY
 ALLOWED_SENDER_DOMAINS="example.org example.com example.net" DKIM_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----|MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC6VtJoI7dkG9Pl|QkKPQKbVQ7g0+FiQEnNoHU0=|-----END PRIVATE KEY-----" docker run -e DKIM_PRIVATE_KEY -e highcanfly/smtp-relay:latest
 ```
 # deploy
-Get image at highcanfly/smtp-relay:latest
+Get image at [highcanfly/smtp-relay:latest](https://hub.docker.com/r/highcanfly/smtp-relay)
+```sh
+docker pull highcanfly/smtp-relay:latest
+```
 
 # configuration
-see https://github.com/bokysan/docker-postfix
+see [bokysan/docker-postfix repository](https://github.com/bokysan/docker-postfix)
