@@ -12,7 +12,7 @@ openssl genrsa -out dkim_private.pem 2048
 next replace all the \n (new line) with a |  and store in in DKIM_PRIVATE_KEY  
 ```sh
 ALLOWED_SENDER_DOMAINS="example.org example.com example.net" DKIM_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----|MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC6VtJoI7dkG9Pl|QkKPQKbVQ7g0+FiQEnNoHU0=|-----END PRIVATE KEY-----" docker run -e DKIM_PRIVATE_KEY -e highcanfly/smtp-relay:latest
-
+```
 # deploy
 Get image at highcanfly/smtp-relay:latest
 
