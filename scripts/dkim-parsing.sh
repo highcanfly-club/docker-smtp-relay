@@ -8,7 +8,7 @@ for DOMAIN in $ALLOWED_SENDER_DOMAINS; do
     echo $DOMAIN
     cp /etc/opendkim/keys/master.key /etc/opendkim/keys/$DOMAIN.private
 cat > /etc/opendkim/keys/$DOMAIN.txt << EOF
-hcfmailer._domainkey	IN	TXT	( "v=DKIM1; h=rsa-sha256; k=rsa; s=email; "
+$DKIM_SELECTOR._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; s=email; "
 	  "p=${PUBLIC_KEY:0:250}"
 	  "${PUBLIC_KEY:250}" )  ; ----- DKIM key mail for $DOMAIN
 EOF
