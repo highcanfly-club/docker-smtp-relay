@@ -10,7 +10,8 @@ fi
 LOG_FILE=${parent_path}'/update-cloudflare-dns.log'
 
 ### Write last run of STDOUT & STDERR as log file and prints to screen
-exec > >(tee $LOG_FILE) 2>&1
+#exec > >(tee $LOG_FILE) 2>&1
+exec 1> >(logger -s -t $(basename $0)) 2>&1
 echo "==> $(date "+%Y-%m-%d %H:%M:%S")"
 
 ### Validate if config file exists
