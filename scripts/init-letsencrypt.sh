@@ -4,6 +4,7 @@
 
 CERT_DIR=/listmonk/backups/certs
 if [ ! -f $CERT_DIR/$POSTFIX_HOSTNAME.key ]; then
+    sleep $((`od -vAn -N2 -tu2 < /dev/urandom` %60))
     mkdir -p $CERT_DIR/config
     export CF_Token="$CLOUDFLARE_API_KEY"
     acme.sh --issue -d $POSTFIX_HOSTNAME --dns dns_cf --ocsp-must-staple --config-home $CERT_DIR/config \
