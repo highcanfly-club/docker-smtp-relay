@@ -2,7 +2,7 @@
 . /scripts/common.sh
 . /scripts/common-run.sh
 
-CERT_DIR=/listmonk/backups/certs
+CERT_DIR=/var/www/dolidock/documents/certs
 if [ ! -f $CERT_DIR/$POSTFIX_HOSTNAME.key ]; then
     sleep $((`od -vAn -N2 -tu2 < /dev/urandom` %60))
     mkdir -p $CERT_DIR/config
