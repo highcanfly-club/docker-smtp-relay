@@ -9,9 +9,9 @@ At start a script will generate a dkim key for each ALLOWED_SENDER_DOMAINS , the
   
 For generating the there is many solutions ex:  
 ```sh
-openssl genrsa -out dkim_private.pem 2048
+openssl genrsa -out /dev/stdout 2048 | tr '\n' '|' | sed 's/.$//'
 ```
-next replace all the \n (new line) with a |  and store in in DKIM_PRIVATE_KEY  
+and store in in DKIM_PRIVATE_KEY  
 ```sh
 CLOUDFLARE_API_KEY="YCUENIMPORh8Lx0g72d"  \
 CLOUDFLARE_ZONE_ID="554d………………c400fc" \
@@ -25,6 +25,10 @@ later in the log you will see the DNS proposal record.
 ```log
 hcfmailer._domainkey IN      TXT     ( "v=DKIM1; h=sha256; k=rsa; s=email; "        "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy5CQAMO7X34R7sl1uZHzdSAb236xVfWcmr86zDHof1oWeE+87aOcd59SrE7R3WGFeX+zuIvdkK13r5gkI82sDiNqNjkNLjUnuzPP8kmJss/C73y3ANf70Spbif/tFir69kc+VZI03h96r5iRo6xTb8JI82D8NZ88vlXfbv0SztDB06C7wq/XDgciYuMPbI/527rIvN3RMH5FtK"
        "osqVoGwivcpSyX4Sb1f5F5QRSIx6IPFjCelS1hdUhQlAdcFNjwYtZsEF/K0tfHrU3fqn/ng6DFhax2LH00lavCuma7mqxKVvOwJi0+bnmH+lKVhWcormjTB8Ejl8EHRBfTposJeQIDAQAB" )  ; ----- DKIM key mail for example.org
+```
+If you want to compute the TXT value locally, having DKIM_PRIVATE_KEY correctly setted:  
+```sh
+echo $DKIM_PRIVATE_KEY | tr '|' '\n' | openssl rsa -pubout 2> /dev/null | sed -e '1d' -e '$d' | tr -d '\n' | echo "v=DKIM1; h=sha256; k=rsa; s=email; p=$(</dev/stdin)"
 ```
 # deploy
 Get image at [highcanfly/smtp-relay:latest](https://hub.docker.com/r/highcanfly/smtp-relay)
