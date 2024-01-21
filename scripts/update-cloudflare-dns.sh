@@ -110,6 +110,9 @@ for record in "${dns_records[@]}"; do
     else
       ### if no "nslookup" command use "host" command
       dns_record_ip=$(host -t A ${record} 1.1.1.1 | awk '/has address/ { print $4 }' | sed -n '1p')
+      if [ -z "$dns_record_ip" ]; then
+        dns_record_ip=$(host -t A ${record}. 1.1.1.1 | awk '/has address/ { print $4 }' | sed -n '1p')
+      fi
     fi
 
     if [ -z "$dns_record_ip" ]; then
