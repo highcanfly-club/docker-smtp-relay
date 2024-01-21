@@ -13,7 +13,7 @@ $DKIM_SELECTOR._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; s=email; p=${PUBLI
 EOF
         echo "*****************************************************************************************************"
         echo "Please make sure to update your DNS records for $DOMAIN! You need to add the following details:"
-        fold -w $(tput cols) /etc/opendkim/keys/$DOMAIN.txt
+        fold -w 80 /etc/opendkim/keys/$DOMAIN.txt
     done
     postfix_setup_dkim
 fi
