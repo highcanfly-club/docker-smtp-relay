@@ -15,9 +15,8 @@ if [[ $USE_LETSENCRYPT -eq '1' ]]; then
             --keylength 4096 --server letsencrypt \
             --cert-file $CERT_DIR/certs/$POSTFIX_HOSTNAME.pem --key-file $CERT_DIR/private/$POSTFIX_HOSTNAME.key \
             --fullchain-file $CERT_DIR/certs/$POSTFIX_HOSTNAME-full.pem
-    else
-        echo "CERT: $POSTFIX_HOSTNAME.pem exists…"
-        acme.sh --renew-all --config-home $CERT_DIR/acme.config
+    fi
+    if [[ -f $CERT_DIR/certs/$POSTFIX_HOSTNAME-full.pem ]]; then
         postconf -e "smtpd_tls_cert_file=$CERT_DIR/certs/$POSTFIX_HOSTNAME-full.pem"
         postconf -e "smtpd_tls_key_file=$CERT_DIR/private/$POSTFIX_HOSTNAME.key"
         postconf -e "smtp_tls_cert_file=$CERT_DIR/certs/$POSTFIX_HOSTNAME-full.pem"
