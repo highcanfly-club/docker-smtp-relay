@@ -14,6 +14,10 @@ EOF
         echo "*****************************************************************************************************"
         echo "Please make sure to update your DNS records for $DOMAIN! You need to add the following details:"
         fold -w 80 /etc/opendkim/keys/$DOMAIN.txt
+        echo "*****************************************************************************************************"
+        echo "Same record is available at /etc/opendkim/keys/$DOMAIN.txt"
+        echo "In one line it looks like this:"
+        cat /etc/opendkim/keys/$DOMAIN.txt | tr -d '\n'
     done
     postfix_setup_dkim
 fi

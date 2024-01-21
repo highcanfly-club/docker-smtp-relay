@@ -4,7 +4,7 @@ ENV USE_LETSENCRYPT '1'
 ENV USE_CLOUDFLARE_DDNS '1'
 ENV USE_DKIM_PARSING '1'
 RUN apt-get update -y \
-    && apt-get install --no-install-recommends -y curl cron &&\
+    && apt-get install --no-install-recommends -y curl cron bind9-host &&\
     apt-get clean &&\
     mkdir -p /etc/crontabs &&\
     echo "*/10     *       *       *       *       sleep \$((\`od -vAn -N2 -tu2 < /dev/urandom\` %300)) ; /update-cloudflare-dns.sh" >> /etc/crontabs/root &&\
@@ -20,4 +20,5 @@ RUN chmod ugo+x /update-cloudflare-dns.sh \
         && chmod ugo+x /docker-init.db/dkim-parsing.sh \
         && chmod ugo+x /docker-init.db/init-cloudflare.sh \
         && chmod ugo+x /docker-init.db/init-letsencrypt.sh
-RUN curl https://get.acme.sh | sh
+RUN curl https://get.acme.sh | sh \
+        && mv /root/.acme.sh/acme.sh /usr/local/bin/acme.sh
