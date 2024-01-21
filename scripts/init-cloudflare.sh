@@ -14,5 +14,3 @@ telegram_chat_id="ChangeMe"
 telegram_bot_API_Token="ChangeMe"
 EOF
 chmod 744 /update-cloudflare-dns.sh
-crond
-

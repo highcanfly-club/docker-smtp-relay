@@ -9,13 +9,11 @@ if [[ $USE_DKIM_PARSING -eq '1' ]]; then
         echo $DOMAIN
         cp /etc/opendkim/keys/master.key /etc/opendkim/keys/$DOMAIN.private
         cat >/etc/opendkim/keys/$DOMAIN.txt <<EOF
-$DKIM_SELECTOR._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; s=email; "
-	  "p=${PUBLIC_KEY:0:250}"
-	  "${PUBLIC_KEY:250}" )  ; ----- DKIM key mail for $DOMAIN
+$DKIM_SELECTOR._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; s=email; p=${PUBLIC_KEY}" )  ; ----- DKIM key mail for $DOMAIN
 EOF
         echo "*****************************************************************************************************"
         echo "Please make sure to update your DNS records for $DOMAIN! You need to add the following details:"
-        cat /etc/opendkim/keys/$DOMAIN.txt
+        fold -w $(tput cols) /etc/opendkim/keys/$DOMAIN.txt
     done
     postfix_setup_dkim
 fi
