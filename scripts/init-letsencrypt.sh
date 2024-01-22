@@ -1,7 +1,7 @@
 #!/bin/bash
 . /scripts/common.sh
 . /scripts/common-run.sh
-if [[ $USE_LETSENCRYPT -eq '1' ]]; then
+if [[ $USE_LETSENCRYPT -eq '1' && ! -d /etc/postfix/certs ]]; then
     if [[ $USE_LETSENCRYPT_STAGING -eq '1' ]]; then
         echo "Using Let's Encrypt staging server"
         STAGING="--staging"
@@ -21,6 +21,21 @@ if [[ $USE_LETSENCRYPT -eq '1' ]]; then
         postconf -e "smtpd_tls_key_file=$CERT_DIR/private/$POSTFIX_HOSTNAME.key"
         postconf -e "smtp_tls_cert_file=$CERT_DIR/certs/$POSTFIX_HOSTNAME-full.pem"
         postconf -e "smtp_tls_key_file=$CERT_DIR/private/$POSTFIX_HOSTNAME.key"
+        postconf -P submission/inet/smtpd_tls_wrappermode=yes
+    fi
+fi
+
+if [[ -d /etc/postfix/certs ]]; then
+    CERT_DIR=/etc/postfix/certs
+    EXTCERT_DIR=/etc/postfix/extcerts
+    mkdir -p $EXTCERT_DIR
+    cat $CERT_DIR/tls.key > $EXTCERT_DIR/$POSTFIX_HOSTNAME.key
+    cat $CERT_DIR/tls.crt > $EXTCERT_DIR/$POSTFIX_HOSTNAME-full.pem
+    if [[ -f $EXTCERT_DIR/$POSTFIX_HOSTNAME-full.pem ]]; then
+        postconf -e "smtpd_tls_cert_file=$EXTCERT_DIR/$POSTFIX_HOSTNAME-full.pem"
+        postconf -e "smtpd_tls_key_file=$EXTCERT_DIR/$POSTFIX_HOSTNAME.key"
+        postconf -e "smtp_tls_cert_file=$EXTCERT_DIR/$POSTFIX_HOSTNAME-full.pem"
+        postconf -e "smtp_tls_key_file=$EXTCERT_DIR/$POSTFIX_HOSTNAME.key"
         postconf -P submission/inet/smtpd_tls_wrappermode=yes
     fi
 fi
