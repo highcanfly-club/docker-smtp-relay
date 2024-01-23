@@ -3,6 +3,13 @@ updateStrategy: RollingUpdate # Recreate | RollingUpdate
 service:
   name: smtp-relay
   port: 25
+resources:
+  limits:
+    cpu: 900m
+    memory: 256Mi
+  requests:
+    cpu: 10m
+    memory: 40Mi
 image:
   registry: docker.io
   repository: highcanfly/smtp-relay
