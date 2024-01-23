@@ -40,7 +40,7 @@ spec:
               value: "{{ .Values.config.relayHost }}"
             {{- end}}
             {{- if and .Values.config.relayHostPassword .Values.config.relayHostUser .Values.config.relayHost }}
-            - name: RELAYHOST_USER
+            - name: RELAYHOST_USERNAME
               value: "{{ .Values.config.relayHostUser }}"
             {{- end}}
           envFrom:
