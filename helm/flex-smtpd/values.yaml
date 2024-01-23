@@ -1,6 +1,7 @@
 replicaCount: 1
 updateStrategy: RollingUpdate # Recreate | RollingUpdate
 service:
+  name: smtp-relay
   port: 25
 image:
   registry: docker.io

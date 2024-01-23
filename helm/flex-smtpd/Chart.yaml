@@ -2,4 +2,4 @@ apiVersion: v2
 name: flex-smtpd
 description: A Helm chart deploying a SMTP relay server https://github.com/highcanfly-club/docker-smtp-relay
 type: application
-version: 0.1.1
+version: 0.1.2
