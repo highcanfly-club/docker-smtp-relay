@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-flex-smtpd-deployment
+  name: {{ .Release.Name }}-flex-smtpd
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -52,6 +52,13 @@ spec:
               mountPath: /etc/postfix/certs
               readOnly: true
           {{- end}}
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
       {{- if .Values.config.certificateSecretName}}
       volumes:
         - name: tls-certs
