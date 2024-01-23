@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-flex-smtpd-deployment
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Release.Name }}-flex-smtpd
   updateStrategy:
     type: {{ .Values.updateStrategy }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Release.Name }}-flex-smtpd
     spec:
       containers:
-        - name: {{ .Release.Name }}
+        - name: {{ .Release.Name }}-flex-smtpd
           image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -45,7 +45,7 @@ spec:
             {{- end}}
           envFrom:
             - secretRef:
-                name: {{ .Release.Name }}-secrets
+                name: {{ .Release.Name }}-flex-smtpd-secrets
           {{- if .Values.config.certificateSecretName}}
           volumeMounts:
             - name: tls-certs
