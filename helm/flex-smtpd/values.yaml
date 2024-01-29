@@ -13,7 +13,7 @@ resources:
 image:
   registry: docker.io
   repository: highcanfly/smtp-relay
-  tag: v4.1.0f
+  tag: v4.1.0e
   pullPolicy: IfNotPresent
 
 config:

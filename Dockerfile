@@ -9,11 +9,11 @@ RUN apt-get update -y \
     mkdir -p /etc/crontabs &&\
     echo "*/10     *       *       *       *       sleep \$((\`od -vAn -N2 -tu2 < /dev/urandom\` %300)) ; /update-cloudflare-dns.sh" >> /etc/crontabs/root &&\
     echo "0        0       *       *       0       sleep \$((\`od -vAn -N2 -tu2 < /dev/urandom\` %14400)) ; /update-letsencrypt.sh" >> /etc/crontabs/root 
-COPY --chmod=744 scripts/dkim-parsing.sh /docker-init.db/
-COPY --chmod=744 scripts/init-cloudflare.sh /docker-init.db/
-COPY --chmod=744 scripts/init-letsencrypt.sh /docker-init.db/
-COPY --chmod=744 scripts/update-cloudflare-dns.sh /
-COPY --chmod=744 scripts/update-letsencrypt.sh /
+COPY --chmod=0755 scripts/dkim-parsing.sh /docker-init.db/
+COPY --chmod=0755 scripts/init-cloudflare.sh /docker-init.db/
+COPY --chmod=0755 scripts/init-letsencrypt.sh /docker-init.db/
+COPY --chmod=0755 scripts/update-cloudflare-dns.sh /
+COPY --chmod=0755 scripts/update-letsencrypt.sh /
 RUN chmod ugo+x /update-cloudflare-dns.sh \
         && chmod ugo+x /update-letsencrypt.sh \
         && chmod ugo+x /update-cloudflare-dns.sh \
