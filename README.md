@@ -1,7 +1,7 @@
 # docker-smtp-relay
 Our adaptation of boky/postfix
 
-# What differs ?
+## What differs ?
 We need to set ddns with a cloudflare record.  
 Note that you need an existing record before running. 
 We need to provide a unique RSA dkim private key for all our domains.  
@@ -30,11 +30,88 @@ If you want to compute the TXT value locally, having DKIM_PRIVATE_KEY correctly 
 ```sh
 echo $DKIM_PRIVATE_KEY | tr '|' '\n' | openssl rsa -pubout 2> /dev/null | sed -e '1d' -e '$d' | tr -d '\n' | echo "v=DKIM1; h=sha256; k=rsa; s=email; p=$(</dev/stdin)"
 ```
-# deploy
+
+## Deployment Options
+
+## Docker Deployment
 Get image at [highcanfly/smtp-relay:latest](https://hub.docker.com/r/highcanfly/smtp-relay)
 ```sh
 docker pull highcanfly/smtp-relay:latest
 ```
 
-# configuration
-see [bokysan/docker-postfix repository](https://github.com/bokysan/docker-postfix)
+### Kubernetes Deployment with Helm
+
+The project includes a Helm chart (`flex-smtpd`) that makes it easy to deploy the SMTP relay service in a Kubernetes environment.
+
+#### Prerequisites
+- Kubernetes cluster
+- Helm installed
+- If using TLS certificates: cert-manager installed (for automatic certificate management)
+
+#### Installing the Chart
+
+1. Create a values file with your configuration (e.g., `my-values.yaml`):
+
+```yaml
+config:
+  useCloudflareDDNS: "1"
+  useLetsEncrypt: "1"
+  useDKIMParsing: "1"
+  postfixHostname: "smtp-relay.yourdomain.com"
+  allowedSenderDomains: "yourdomain.com yourbusiness.com"
+  dkimSelector: "mail"
+  dkimPrivateKey: "-----BEGIN PRIVATE KEY-----|YOUR_PRIVATE_KEY_HERE|-----END PRIVATE KEY-----"
+  
+  # If using CloudFlare for DNS and DDNS
+  cloudflareDnsRecords: "smtp-relay.yourdomain.com"
+  cloudflareApiKey: "your-cloudflare-api-key"
+  cloudflareZoneId: "your-cloudflare-zone-id"
+  
+  # For TLS with cert-manager
+  certificateSecretName: "smtp-relay-tls"
+  certificateIssuer: "letsencrypt-prod"
+  certificateIssuerKind: "ClusterIssuer"
+  
+  # If relaying to another SMTP server
+  relayHost: "[smtp.provider.com]:587"
+  relayHostUser: "your-username"
+  relayHostPassword: "your-password"
+```
+
+2. Install the chart:
+
+```sh
+helm install smtp-relay ./helm/flex-smtpd --values my-values.yaml --namespace mail --create-namespace
+```
+
+#### Key Configuration Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `config.useCloudflareDDNS` | Enable CloudFlare DDNS update | "0" |
+| `config.useLetsEncrypt` | Use Let's Encrypt for TLS certificates | "0" |
+| `config.useDKIMParsing` | Enable DKIM key parsing | "1" |
+| `config.postfixHostname` | The hostname for your SMTP server | "smtp-relay.domain.com" |
+| `config.allowedSenderDomains` | Space-separated list of domains allowed to send mail | "domain.com" |
+| `config.dkimSelector` | The DKIM selector to use | "dkim-flex-smtpd" |
+| `config.certificateSecretName` | Name of the TLS certificate secret | "" |
+
+#### Using Cert-Manager Integration
+
+When `config.certificateSecretName` is set, the chart will create a Certificate resource using cert-manager. Make sure you have a valid issuer configured in your cluster.
+
+#### Resource Limits
+
+The chart comes with default resource limits that can be adjusted:
+
+```yaml
+resources:
+  limits:
+    cpu: 900m
+    memory: 256Mi
+  requests:
+    cpu: 10m
+    memory: 40Mi
+```
+
+For more configuration options, see [bokysan/docker-postfix repository](https://github.com/bokysan/docker-postfix)
