@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}-flex-smtpd
-  updateStrategy:
+  strategy:
     type: {{ .Values.updateStrategy }}
   template:
     metadata:
